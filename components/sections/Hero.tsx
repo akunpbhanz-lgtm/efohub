@@ -35,7 +35,23 @@ export function Hero() {
           and celebrate every clutch moment together.
         </p>
         <div className="mt-10 flex flex-wrap items-center gap-4">
-<Button
+          <Button size="lg" className="rounded-full px-8 shadow-glow" asChild>
+            <a href="#join">
+              Bergabung Sekarang <ArrowRight className="ml-2 h-4 w-4" />
+            </a>
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="rounded-full border-accent/60 px-6 text-white hover:border-accent hover:bg-accent/10"
+            asChild
+          >
+            <a href="#tournaments">
+              <Trophy className="mr-2 h-4 w-4" />
+              Lihat Turnamen
+            </a>
+          </Button>
+          <Button
             size="lg"
             variant="ghost"
             className="rounded-full border border-white/20 bg-white/5 px-6 text-white/80 hover:bg-white/10 hover:text-white"
@@ -50,18 +66,6 @@ export function Hero() {
               Join Discord
             </a>
           </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="rounded-full border-accent/60 px-6 text-white hover:border-accent hover:bg-accent/10"
-            asChild
-          >
-            <a href="#tournaments">
-              <Trophy className="mr-2 h-4 w-4" />
-              Lihat Turnamen
-            </a>
-          </Button>
-          
         </div>
       </motion.div>
 

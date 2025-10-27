@@ -60,7 +60,7 @@ export function Navbar() {
           <a href="/login">Login</a>
         </Button>
         <Button asChild className="shadow-glow">
-          <a href="#join">Daftar</a>
+          <a href="/register">Daftar</a>
         </Button>
       </div>
 
@@ -102,7 +102,7 @@ export function Navbar() {
                   </a>
                 </Button>
                 <Button asChild className="flex-1">
-                  <a href="#join" onClick={() => setIsOpen(false)}>
+                  <a href="/register" onClick={() => setIsOpen(false)}>
                     Daftar
                   </a>
                 </Button>

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, useInView } from "framer-motion";
 import { DiscordLogoIcon } from "@radix-ui/react-icons";
-import { Send, Sparkles } from "lucide-react";
+import { Lock, Send, Sparkles } from "lucide-react";
 
 import { SectionHeading } from "@/components/sections/SectionHeading";
 import { Button } from "@/components/ui/button";
@@ -23,13 +23,58 @@ export function JoinSection() {
   const [formState, setFormState] = React.useState({
     name: "",
     email: "",
+    password: "",
+    discord: "",
     level: levels[0].value,
   });
   const [submitted, setSubmitted] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+    if (submitted) return;
+
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formState.name,
+          email: formState.email,
+          password: formState.password,
+          skillLevel: formState.level,
+          discordUsername: formState.discord,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error ?? "Gagal mendaftar. Coba lagi.");
+        return;
+      }
+
+      setSubmitted(true);
+      setFormState((prev) => ({
+        ...prev,
+        name: "",
+        email: "",
+        password: "",
+        discord: "",
+        level: levels[0].value,
+      }));
+    } catch (submitError) {
+      console.error(submitError);
+      setError("Terjadi kesalahan. Silakan coba lagi.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -78,6 +123,42 @@ export function JoinSection() {
             />
           </div>
           <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type="password"
+                placeholder="Minimal 6 karakter"
+                value={formState.password}
+                onChange={(event) =>
+                  setFormState((prev) => ({
+                    ...prev,
+                    password: event.target.value,
+                  }))
+                }
+                minLength={6}
+                required
+                className="pr-11"
+              />
+              <Lock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="discord">Username Discord</Label>
+            <Input
+              id="discord"
+              placeholder="contoh: gamer#1234"
+              value={formState.discord}
+              onChange={(event) =>
+                setFormState((prev) => ({
+                  ...prev,
+                  discord: event.target.value,
+                }))
+              }
+              required
+            />
+          </div>
+          <div className="grid gap-2">
             <Label htmlFor="level">Skill Level</Label>
             <select
               id="level"
@@ -94,19 +175,35 @@ export function JoinSection() {
               ))}
             </select>
           </div>
-          <Button type="submit" size="lg" className="rounded-xl">
+          {error ? (
+            <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+              {error}
+            </p>
+          ) : null}
+          <Button
+            type="submit"
+            size="lg"
+            className="rounded-xl"
+            disabled={isSubmitting}
+          >
             {submitted ? (
               <>
                 <Sparkles className="mr-2 h-5 w-5" />
-                Application Received
+                Pendaftaran Berhasil
               </>
             ) : (
               <>
                 <Send className="mr-2 h-5 w-5" />
-                Request Invite
+                {isSubmitting ? "Mengirim..." : "Request Invite"}
               </>
             )}
           </Button>
+          {submitted ? (
+            <p className="text-sm text-white/60">
+              Akun kamu siap! Kamu sudah masuk secara otomatis dan bisa mulai
+              jelajahi turnamen.
+            </p>
+          ) : null}
         </form>
 
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-white/70">
