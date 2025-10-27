@@ -1,0 +1,41 @@
+@import "../styles/patterns.css";
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --background: #0b0e14;
+  --foreground: #f2f7ff;
+  --muted: #1a2333;
+  --card: rgba(12, 16, 24, 0.78);
+  --accent: #1e90ff;
+  --neon: #58fcec;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-accent: var(--accent);
+  --color-neon: var(--neon);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  background-image: radial-gradient(circle at top, rgba(30, 144, 255, 0.12), transparent 60%),
+    radial-gradient(circle at bottom, rgba(88, 252, 236, 0.08), transparent 55%),
+    var(--texture-noise, none);
+  backdrop-filter: blur(0px);
+}
+
+::selection {
+  background-color: rgba(30, 144, 255, 0.35);
+  color: #ffffff;
+}
